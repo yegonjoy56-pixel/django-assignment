@@ -1,0 +1,82 @@
+
+{% extends "base.html" %}
+
+{% block title %}Login | Green Haven{% endblock %}
+
+{% block content %}
+
+<section style="max-width: 480px; margin: 20px auto;">
+
+    <div style="text-align: center; margin-bottom: 25px;">
+        <div style="font-size: 55px;"></div>
+
+        <h1 style="color: #19452b; font-size: 32px; margin: 10px 0;">
+            Welcome Back!
+        </h1>
+
+        <p style="color: #657267; font-size: 15px;">
+            Log in to your Green Haven account.
+        </p>
+    </div>
+
+    <div style="background-color: white; padding: 30px; border: 1px solid #e0e7df; border-radius: 15px;">
+
+        {% if form.errors %}
+            <div style="background-color: #fff0ef; color: #a52a2a; padding: 12px; border-radius: 7px; margin-bottom: 20px;">
+                Your username or password is incorrect. Please try again.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div style="margin-bottom: 20px;">
+
+                    <label for="{{ field.id_for_label }}"
+                           style="display: block; color: #245c3a; font-weight: bold; margin-bottom: 7px;">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div style="color: #718073; font-size: 12px; margin-top: 5px;">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p style="color: #b42318; font-size: 13px; margin: 5px 0;">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                    style="width: 100%; background-color: #245c3a; color: white; padding: 13px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                Login to Your Account
+            </button>
+
+        </form>
+
+        <div style="text-align: center; margin-top: 25px; border-top: 1px solid #e0e7df; padding-top: 20px;">
+
+            <p style="color: #657267; margin-bottom: 10px;">
+                Don't have an account yet?
+            </p>
+
+            <a href="{% url 'accounts:register' %}"
+               style="color: #36794d; font-weight: bold; text-decoration: none;">
+                Create an Account →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

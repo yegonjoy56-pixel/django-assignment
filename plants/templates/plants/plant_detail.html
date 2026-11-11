@@ -1,0 +1,215 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ plant.name }} | Green Haven{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Navigation -->
+<div style="margin-bottom: 25px; font-size: 14px; color: #657267;">
+    <a href="{% url 'home:home' %}" style="color: #36794d; text-decoration: none;">Home</a>
+    <span style="margin: 0 8px;">/</span>
+    <a href="{% url 'plants:plant_list' %}" style="color: #36794d; text-decoration: none;">Plants</a>
+    <span style="margin: 0 8px;">/</span>
+    <span>{{ plant.name }}</span>
+</div>
+
+
+<!-- Plant Details -->
+<section style="display: flex; flex-wrap: wrap; gap: 35px; align-items: flex-start; background-color: white; padding: 28px; border: 1px solid #e0e7df; border-radius: 16px;">
+
+    <!-- Plant Image -->
+    <div style="flex: 1 1 300px; min-width: 0;">
+
+        {% if plant.image %}
+            <img src="{{ plant.image.url }}"
+                 alt="{{ plant.name }}"
+                 style="width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px;">
+        {% else %}
+            <div style="height: 350px; background-color: #e8f1e6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 100px;">
+                🪴
+            </div>
+        {% endif %}
+
+    </div>
+
+
+    <!-- Plant Information -->
+    <div style="flex: 1 1 300px; min-width: 0;">
+
+        <p style="color: #36794d; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+            Green Haven Collection
+        </p>
+
+        <h1 style="color: #19452b; font-size: 34px; line-height: 1.2; margin: 10px 0;">
+            {{ plant.name }}
+        </h1>
+
+        <p style="color: #718073; font-style: italic; font-size: 16px;">
+            {{ plant.species.scientific_name }}
+        </p>
+
+        <p style="color: #58665a; line-height: 1.8;">
+            {{ plant.description|default:"A beautiful plant to brighten your space." }}
+        </p>
+
+        <div style="background-color: #f2f7ef; padding: 18px; border-radius: 10px; margin: 20px 0;">
+
+            <p style="margin: 0 0 8px; color: #657267; font-size: 14px;">
+                Price
+            </p>
+
+            <h2 style="color: #245c3a; font-size: 30px; margin: 0;">
+                {% if plant.price %}
+                    KSh {{ plant.price|floatformat:2 }}
+                {% else %}
+                    Price unavailable
+                {% endif %}
+            </h2>
+
+            <p style="color: #36794d; font-size: 13px; margin-bottom: 0;">
+                {% if plant.is_available %}
+                    ✓ Available for purchase
+                {% else %}
+                    Currently unavailable
+                {% endif %}
+            </p>
+
+        </div>
+
+
+        <!-- Add to Cart -->
+        {% if plant.is_available and plant.price != None %}
+
+            <form method="post" action="{% url 'shop:cart_add' plant.id %}" style="margin-top: 20px;">
+                {% csrf_token %}
+
+                <button type="submit"
+                        style="width: 100%; background-color: #245c3a; color: white; padding: 15px 20px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                    🛒 Add to Cart
+                </button>
+            </form>
+
+        {% endif %}
+
+        <a href="{% url 'plants:plant_list' %}"
+           style="display: inline-block; margin-top: 15px; color: #36794d; text-decoration: none; font-weight: bold;">
+            ← Continue Shopping
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- Plant Information -->
+<section style="margin-top: 35px; background-color: white; padding: 25px; border: 1px solid #e0e7df; border-radius: 14px;">
+
+    <h2 style="color: #245c3a; font-size: 25px; margin-top: 0;">
+        About This Plant
+    </h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+        <div style="flex: 1 1 220px; padding: 15px; background-color: #f7faf5; border-radius: 9px;">
+            <p style="color: #657267; margin: 0 0 5px; font-size: 13px;">Common Name</p>
+            <p style="color: #245c3a; font-weight: bold; margin: 0;">
+                {{ plant.species.common_name }}
+            </p>
+        </div>
+
+        <div style="flex: 1 1 220px; padding: 15px; background-color: #f7faf5; border-radius: 9px;">
+            <p style="color: #657267; margin: 0 0 5px; font-size: 13px;">Plant Family</p>
+            <p style="color: #245c3a; font-weight: bold; margin: 0;">
+                {{ plant.species.plant_family|default:"Not specified" }}
+            </p>
+        </div>
+
+        <div style="flex: 1 1 220px; padding: 15px; background-color: #f7faf5; border-radius: 9px;">
+            <p style="color: #657267; margin: 0 0 5px; font-size: 13px;">Native Region</p>
+            <p style="color: #245c3a; font-weight: bold; margin: 0;">
+                {{ plant.species.native_region|default:"Not specified" }}
+            </p>
+        </div>
+
+    </div>
+
+    {% if plant.species.description %}
+        <p style="color: #58665a; line-height: 1.8; margin-top: 20px;">
+            {{ plant.species.description }}
+        </p>
+    {% endif %}
+
+</section>
+
+
+<!-- Plant Care Guide -->
+<section style="margin-top: 35px; background-color: #e8f1e6; padding: 28px; border-radius: 14px;">
+
+    <h2 style="color: #19452b; font-size: 27px; margin-top: 0;">
+        🌱 Plant Care Guide
+    </h2>
+
+    {% if care_guide %}
+
+        <div style="display: flex; flex-wrap: wrap; gap: 18px;">
+
+            <div style="flex: 1 1 250px; background-color: white; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #245c3a; margin-top: 0;">💧 Watering</h3>
+                <p style="color: #58665a; line-height: 1.7; margin-bottom: 0;">
+                    {{ care_guide.watering_instructions }}
+                </p>
+            </div>
+
+            <div style="flex: 1 1 250px; background-color: white; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #245c3a; margin-top: 0;">☀️ Sunlight</h3>
+                <p style="color: #58665a; line-height: 1.7; margin-bottom: 0;">
+                    {{ care_guide.sunlight_requirements }}
+                </p>
+            </div>
+
+            <div style="flex: 1 1 250px; background-color: white; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #245c3a; margin-top: 0;">🪴 Soil</h3>
+                <p style="color: #58665a; line-height: 1.7; margin-bottom: 0;">
+                    {{ care_guide.soil_requirements|default:"No soil information provided." }}
+                </p>
+            </div>
+
+            <div style="flex: 1 1 250px; background-color: white; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #245c3a; margin-top: 0;">🌡️ Temperature</h3>
+                <p style="color: #58665a; line-height: 1.7; margin-bottom: 0;">
+                    {{ care_guide.temperature_range|default:"No temperature information provided." }}
+                </p>
+            </div>
+
+        </div>
+
+        {% if care_guide.fertilizing_instructions %}
+            <div style="background-color: white; padding: 20px; border-radius: 10px; margin-top: 18px;">
+                <h3 style="color: #245c3a; margin-top: 0;">🌿 Fertilizing</h3>
+                <p style="color: #58665a; line-height: 1.7;">
+                    {{ care_guide.fertilizing_instructions }}
+                </p>
+            </div>
+        {% endif %}
+
+        {% if care_guide.additional_tips %}
+            <div style="background-color: white; padding: 20px; border-radius: 10px; margin-top: 18px;">
+                <h3 style="color: #245c3a; margin-top: 0;">💚 Additional Tips</h3>
+                <p style="color: #58665a; line-height: 1.7;">
+                    {{ care_guide.additional_tips }}
+                </p>
+            </div>
+        {% endif %}
+
+    {% else %}
+
+        <p style="color: #58665a; line-height: 1.8;">
+            A care guide has not been added for this plant yet. Please check back later.
+        </p>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

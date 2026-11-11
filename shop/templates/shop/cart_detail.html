@@ -1,0 +1,168 @@
+
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart | Green Haven{% endblock %}
+
+{% block content %}
+
+<section style="margin-bottom: 30px;">
+
+    <p style="color: #36794d; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+        Your Shopping
+    </p>
+
+    <h1 style="color: #19452b; font-size: 34px; margin: 5px 0 10px;">
+        Shopping Cart
+    </h1>
+
+    <p style="color: #657267;">
+        Review your selected plants before proceeding to checkout.
+    </p>
+
+</section>
+
+
+{% if cart %}
+
+    <div style="display: flex; flex-wrap: wrap; gap: 25px; align-items: flex-start;">
+
+        <!-- Cart Items -->
+        <section style="flex: 2 1 450px; min-width: 0; background-color: white; border: 1px solid #e0e7df; border-radius: 12px; padding: 20px;">
+
+            <h2 style="color: #245c3a; font-size: 22px; margin-top: 0;">
+                Cart Items
+            </h2>
+
+            {% for item in cart %}
+
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; padding: 20px 0; border-bottom: 1px solid #e0e7df;">
+
+                    <!-- Product Image -->
+                    <div style="flex: 0 0 100px;">
+
+                        {% if item.plant.image %}
+                            <img src="{{ item.plant.image.url }}"
+                                 alt="{{ item.plant.name }}"
+                                 style="width: 100px; height: 100px; object-fit: cover; border-radius: 9px;">
+                        {% else %}
+                            <div style="width: 100px; height: 100px; background-color: #e8f1e6; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #245c3a; font-size: 13px; text-align: center;">
+                                No image
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Product Information -->
+                    <div style="flex: 1 1 160px;">
+
+                        <h3 style="color: #245c3a; margin: 0 0 7px; font-size: 19px;">
+                            {{ item.plant.name }}
+                        </h3>
+
+                        <p style="color: #657267; margin: 4px 0; font-size: 14px;">
+                            Unit price: KSh {{ item.price|floatformat:2 }}
+                        </p>
+
+                        <p style="color: #657267; margin: 4px 0; font-size: 14px;">
+                            Quantity: {{ item.quantity }}
+                        </p>
+
+                        <p style="color: #245c3a; font-weight: bold; margin: 8px 0;">
+                            Subtotal: KSh {{ item.total_price|floatformat:2 }}
+                        </p>
+
+                    </div>
+
+                    <!-- Remove Item -->
+                    <div>
+                        <form method="post" action="{% url 'shop:cart_remove' item.plant.id %}">
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    style="background-color: white; color: #a52a2a; border: 1px solid #a52a2a; padding: 9px 12px; border-radius: 6px; cursor: pointer;">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+            <div style="margin-top: 20px;">
+                <a href="{% url 'plants:plant_list' %}"
+                   style="color: #36794d; text-decoration: none; font-weight: bold;">
+                    Continue Shopping
+                </a>
+            </div>
+
+        </section>
+
+
+        <!-- Order Summary -->
+        <aside style="flex: 1 1 250px; background-color: #e8f1e6; padding: 25px; border-radius: 12px;">
+
+            <h2 style="color: #19452b; font-size: 22px; margin-top: 0;">
+                Order Summary
+            </h2>
+
+            <div style="display: flex; justify-content: space-between; gap: 10px; padding: 15px 0; border-bottom: 1px solid #cbdcc8;">
+                <span style="color: #58665a;">Items</span>
+                <span style="color: #245c3a; font-weight: bold;">{{ cart|length }}</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 20px 0;">
+                <span style="color: #245c3a; font-weight: bold;">Total</span>
+
+                <span style="color: #19452b; font-size: 23px; font-weight: bold;">
+                    KSh {{ cart.get_total_price|floatformat:2 }}
+                </span>
+            </div>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'shop:checkout' %}"
+                   style="display: block; background-color: #245c3a; color: white; padding: 14px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold;">
+                    Proceed to Checkout
+                </a>
+
+            {% else %}
+
+                <p style="color: #58665a; font-size: 14px;">
+                    Please log in to complete your purchase.
+                </p>
+
+                <a href="{% url 'accounts:login' %}?next={% url 'shop:checkout' %}"
+                   style="display: block; background-color: #245c3a; color: white; padding: 14px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold;">
+                    Login to Checkout
+                </a>
+
+            {% endif %}
+
+        </aside>
+
+    </div>
+
+{% else %}
+
+    <!-- Empty Cart -->
+    <section style="background-color: white; text-align: center; padding: 55px 25px; border: 1px solid #e0e7df; border-radius: 14px;">
+
+        <h2 style="color: #245c3a; font-size: 27px;">
+            Your Cart Is Empty
+        </h2>
+
+        <p style="color: #657267; margin: 15px 0 25px;">
+            You haven't added any plants to your shopping cart yet.
+        </p>
+
+        <a href="{% url 'plants:plant_list' %}"
+           style="display: inline-block; background-color: #245c3a; color: white; padding: 13px 22px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Explore Plants
+        </a>
+
+    </section>
+
+{% endif %}
+
+{% endblock %}

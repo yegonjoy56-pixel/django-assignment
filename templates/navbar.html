@@ -1,0 +1,66 @@
+
+<nav style="background-color: #245c3a; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+
+    <!-- Website logo/name -->
+    <a href="{% url 'home:home' %}"
+       style="color: white; font-size: 26px; font-weight: bold; text-decoration: none;">
+        Green Haven 
+    </a>
+
+    <!-- Navigation links -->
+    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+
+        <a href="{% url 'home:home' %}"
+           style="color: white; text-decoration: none; padding: 8px 12px;">
+            Home
+        </a>
+
+        <a href="{% url 'plants:plant_list' %}"
+           style="color: white; text-decoration: none; padding: 8px 12px;">
+            Plants
+        </a>
+
+        <a href="{% url 'shop:cart_detail' %}"
+           style="color: white; text-decoration: none; padding: 8px 12px;">
+            Cart
+        </a>
+
+        {% if user.is_authenticated %}
+
+            <a href="{% url 'accounts:dashboard' %}"
+               style="color: white; text-decoration: none; padding: 8px 12px;">
+                Dashboard
+            </a>
+
+            <a href="{% url 'shop:my_orders' %}"
+               style="color: white; text-decoration: none; padding: 8px 12px;">
+                My Orders
+            </a>
+
+            <form method="post"
+                  action="{% url 'accounts:logout' %}"
+                  style="display: inline; margin: 0;">
+                {% csrf_token %}
+
+                <button type="submit"
+                        style="background-color: #ffffff; color: #245c3a; border: none; border-radius: 6px; padding: 9px 14px; font-weight: bold; cursor: pointer;">
+                    Logout
+                </button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'accounts:login' %}"
+               style="color: white; text-decoration: none; padding: 8px 12px;">
+                Login
+            </a>
+
+            <a href="{% url 'accounts:register' %}"
+               style="background-color: white; color: #245c3a; text-decoration: none; padding: 9px 14px; border-radius: 6px; font-weight: bold;">
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+</nav>

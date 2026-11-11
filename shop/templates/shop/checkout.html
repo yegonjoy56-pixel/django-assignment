@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | Green Haven{% endblock %}
+
+{% block content %}
+
+<!-- Page Heading -->
+<section style="margin-bottom: 30px;">
+    <p style="color: #36794d; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+        Complete Your Purchase
+    </p>
+
+    <h1 style="color: #19452b; font-size: 34px; margin: 5px 0 10px;">
+        Checkout
+    </h1>
+
+    <p style="color: #657267;">
+        Enter your delivery details to place your plant order.
+    </p>
+</section>
+
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 25px;">
+
+    <!-- Checkout Form -->
+    <section
+        style="flex: 2 1 400px; min-width: 0; background-color: white; padding: 28px; border: 1px solid #e0e7df; border-radius: 14px;">
+
+        <h2 style="color: #245c3a; font-size: 23px; margin-top: 0;">
+            Delivery Information
+        </h2>
+
+        <p style="color: #657267; font-size: 14px; margin-bottom: 22px;">
+            Choose how you would like to pay for your order.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div
+                style="background-color: #fff0ef; color: #a52a2a; padding: 12px; border-radius: 7px; margin-bottom: 20px;">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+
+            <div style="margin-bottom: 22px;">
+
+                <label for="{{ field.id_for_label }}"
+                    style="display: block; color: #245c3a; font-weight: bold; margin-bottom: 8px;">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                <p style="color: #718073; font-size: 13px; margin: 5px 0;">
+                    {{ field.help_text }}
+                </p>
+                {% endif %}
+
+                {% for error in field.errors %}
+                <p style="color: #b42318; font-size: 13px; margin: 5px 0;">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            {% endfor %}
+
+            <button type="submit"
+                style="width: 100%; background-color: #245c3a; color: white; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                Place Order
+            </button>
+
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'shop:cart_detail' %}" style="color: #36794d; text-decoration: none; font-weight: bold;">
+                Back to Cart
+            </a>
+        </div>
+
+    </section>
+
+
+    <!-- Order Summary -->
+    <aside style="flex: 1 1 250px; background-color: #e8f1e6; padding: 25px; border-radius: 14px;">
+
+        <h2 style="color: #19452b; font-size: 22px; margin-top: 0;">
+            Order Summary
+        </h2>
+
+        <p style="color: #58665a; line-height: 1.7;">
+            Please review your cart before placing your order.
+        </p>
+
+        <div style="border-top: 1px solid #cbdcc8; margin-top: 20px; padding-top: 20px;">
+
+            <p style="color: #245c3a; font-weight: bold;">
+                Your delivery details
+            </p>
+
+            <p style="color: #58665a; font-size: 14px;">
+                Make sure your full name, phone number, and delivery address are correct.
+            </p>
+
+        </div>
+
+        <a href="{% url 'shop:cart_detail' %}"
+            style="display: block; margin-top: 20px; padding: 12px; text-align: center; color: #245c3a; border: 1px solid #245c3a; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Review Cart
+        </a>
+
+    </aside>
+
+</div>
+
+{% endblock %}

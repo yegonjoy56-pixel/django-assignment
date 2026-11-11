@@ -1,0 +1,104 @@
+
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed | Green Haven{% endblock %}
+
+{% block content %}
+
+<section style="max-width: 750px; margin: 20px auto;">
+
+    <!-- Confirmation Header -->
+    <div style="background-color: #e8f1e6; padding: 40px 25px; border-radius: 16px; text-align: center;">
+
+        <div style="width: 70px; height: 70px; border: 3px solid #36794d; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #245c3a; font-size: 38px; font-weight: bold;">
+            &#10003;
+        </div>
+
+        <h1 style="color: #19452b; font-size: 32px; margin: 10px 0;">
+            Order Placed Successfully
+        </h1>
+
+        <p style="color: #58665a; font-size: 16px; line-height: 1.7; max-width: 500px; margin: 0 auto;">
+            Thank you for shopping with Green Haven. Your order has been received and is awaiting processing.
+        </p>
+
+    </div>
+
+
+    <!-- Order Information -->
+    <div style="background-color: white; padding: 28px; border: 1px solid #e0e7df; border-radius: 14px; margin-top: 25px;">
+
+        <h2 style="color: #245c3a; font-size: 23px; margin-top: 0;">
+            Order Information
+        </h2>
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 15px 0; border-bottom: 1px solid #e0e7df;">
+            <span style="color: #657267; font-weight: bold;">Order Number</span>
+            <span style="color: #245c3a; font-weight: bold;">#{{ order.id }}</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 15px 0; border-bottom: 1px solid #e0e7df;">
+            <span style="color: #657267; font-weight: bold;">Order Date</span>
+            <span style="color: #26352a;">{{ order.created_at|date:"d M Y, H:i" }}</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 15px 0; border-bottom: 1px solid #e0e7df;">
+            <span style="color: #657267; font-weight: bold;">Order Status</span>
+            <span style="background-color: #fff3cd; color: #856404; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold;">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 18px 0;">
+            <span style="color: #245c3a; font-size: 18px; font-weight: bold;">Order Total</span>
+            <span style="color: #19452b; font-size: 22px; font-weight: bold;">
+                KSh {{ order.total_amount|floatformat:2 }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- Delivery Details -->
+    <div style="background-color: white; padding: 28px; border: 1px solid #e0e7df; border-radius: 14px; margin-top: 20px;">
+
+        <h2 style="color: #245c3a; font-size: 22px; margin-top: 0;">
+            Delivery Details
+        </h2>
+
+        <p style="color: #657267; margin-bottom: 5px;">Recipient</p>
+        <p style="color: #26352a; font-weight: bold; margin-top: 0;">
+            {{ order.full_name }}
+        </p>
+
+        <p style="color: #657267; margin-bottom: 5px;">Phone Number</p>
+        <p style="color: #26352a; margin-top: 0;">
+            {{ order.phone_number }}
+        </p>
+
+        <p style="color: #657267; margin-bottom: 5px;">Delivery Address</p>
+        <p style="color: #26352a; margin-top: 0; white-space: pre-line;">
+            {{ order.delivery_address }}
+        </p>
+
+    </div>
+
+
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 28px;">
+
+        <a href="{% url 'shop:my_orders' %}"
+           style="display: inline-block; background-color: #245c3a; color: white; padding: 13px 22px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            View My Orders
+        </a>
+
+        <a href="{% url 'plants:plant_list' %}"
+           style="display: inline-block; background-color: white; color: #245c3a; padding: 13px 22px; border: 1px solid #245c3a; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Continue Shopping
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

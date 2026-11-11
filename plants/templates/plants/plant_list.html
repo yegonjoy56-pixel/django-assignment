@@ -1,0 +1,110 @@
+
+{% extends "base.html" %}
+
+{% block title %}Our Plants | Green Haven{% endblock %}
+
+{% block content %}
+
+<!-- Page Heading -->
+<section style="text-align: center; padding: 35px 15px; background-color: #e8f1e6; border-radius: 15px; margin-bottom: 35px;">
+
+    <p style="color: #36794d; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;">
+        Explore Our Collection
+    </p>
+
+    <h1 style="color: #19452b; font-size: 36px; margin: 10px 0;">
+        Our Beautiful Plants
+    </h1>
+
+    <p style="color: #58665a; font-size: 16px; max-width: 600px; margin: 0 auto;">
+        Discover plants that bring freshness, beauty, and life into your home.
+    </p>
+
+</section>
+
+
+<!-- Plant Count -->
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;">
+
+    <h2 style="color: #245c3a; font-size: 23px; margin: 0;">
+        Available Plants
+    </h2>
+
+    <span style="background-color: #e3f1df; color: #245c3a; padding: 7px 13px; border-radius: 20px; font-size: 14px; font-weight: bold;">
+        {{ plants|length }} plant{{ plants|length|pluralize }}
+    </span>
+
+</div>
+
+
+<!-- Plant Cards -->
+<div style="display: flex; flex-wrap: wrap; gap: 22px; justify-content: center;">
+
+    {% for plant in plants %}
+
+        <div style="flex: 1 1 250px; max-width: 350px; background-color: white; border: 1px solid #e0e7df; border-radius: 14px; overflow: hidden; padding: 18px;">
+
+            {% if plant.image %}
+                <img src="{{ plant.image.url }}"
+                     alt="{{ plant.name }}"
+                     style="width: 100%; height: 220px; object-fit: cover; border-radius: 9px;">
+            {% else %}
+                <div style="height: 200px; background-color: #e8f1e6; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 65px;">
+                    🪴
+                </div>
+            {% endif %}
+
+            <p style="color: #36794d; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 17px 0 5px;">
+                {{ plant.species.plant_family|default:"Plant Collection" }}
+            </p>
+
+            <h3 style="color: #245c3a; font-size: 22px; margin: 5px 0;">
+                {{ plant.name }}
+            </h3>
+
+            <p style="color: #718073; font-size: 14px; font-style: italic; margin: 5px 0;">
+                {{ plant.species.scientific_name }}
+            </p>
+
+            <p style="color: #58665a; font-size: 15px; line-height: 1.6;">
+                {{ plant.description|default:"A beautiful addition to your plant collection."|truncatewords:18 }}
+            </p>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px;">
+
+                <span style="color: #245c3a; font-size: 20px; font-weight: bold;">
+                    {% if plant.price %}
+                        KSh {{ plant.price|floatformat:2 }}
+                    {% else %}
+                        Price unavailable
+                    {% endif %}
+                </span>
+
+                <a href="{% url 'plants:plant_detail' plant.id %}"
+                   style="background-color: #36794d; color: white; text-decoration: none; padding: 10px 15px; border-radius: 7px; font-weight: bold;">
+                    View Details
+                </a>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <div style="width: 100%; background-color: white; text-align: center; padding: 45px 20px; border: 1px solid #e0e7df; border-radius: 12px;">
+
+            <div style="font-size: 55px;">🌱</div>
+
+            <h3 style="color: #245c3a;">No plants available yet</h3>
+
+            <p style="color: #657267;">
+                We're preparing our collection. Please check back soon!
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
